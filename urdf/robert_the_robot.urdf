@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robert_the_robot">
+
+<xacro:property name="base_link_length" value="0.2" />
+<xacro:property name="base_link_radius" value="0.4" />
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder length="${base_link_length}" radius="${base_link_radius}"/>
+      </geometry>
+      <origin xyz="0 0 0.1"/>
+    </visual>
+  </link>
+
+
+<xacro:property name="wheel_link_length" value="0.04" />
+<xacro:property name="wheel_link_radius" value="0.2" />
+<xacro:property name="wheel_link_mass" value="0.2" />
+<xacro:property name="wheel_link_inertia_x" value="${1/12*wheel_link_mass*(3*wheel_link_radius*wheel_link_radius+wheel_link_length*wheel_link_length)}"/>
+<xacro:property name="wheel_link_inertia_y" value="${1/12*wheel_link_mass*(3*wheel_link_radius*wheel_link_radius+wheel_link_length*wheel_link_length)}"/>
+<xacro:property name="wheel_link_inertia_x" value="${1/2*wheel_link_mass*wheel_link_radius*wheel_link_radius}"/>
+
+
+  <link name="wheel_right">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <mass value="0.5"/>
+      <inertia ixx="${wheel_link_inertia_x}" ixy="0.0" ixz="0.0" iyy="${wheel_link_inertia_y)" iyz="0.0" izz="${wheel_link_inertia_z}"/>
+    </inertial>
+    
+    <visual>
+      <geometry> 
+        <cylinder length="${wheel_link_length}" radius="${wheel_link_radius}"/>
+      </geometry>
+      <origin rpy="1.57 0.0 0.0"/>
+    </visual>
+  </link>
+  
+
+<link name="wheel_left">
+  <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <mass value="0.5"/>
+      <inertia ixx="${wheel_link_inertia_x}" ixy="0.0" ixz="0.0" iyy="${wheel_link_inertia_y)" iyz="0.0" izz="${wheel_link_inertia_z}"/>
+    </inertial>
+    
+    <visual>
+      <origin rpy="1.57 0.0 0.0"/>
+      <geometry>
+        <cylinder length="${wheel_link_length}" radius="${wheel_link_radius}"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <cylinder length="${wheel_link_length}" radius="${wheel_link_radius}"/>
+      </geometry> 
+    </collision>
+  </link>
+
+
+
+<joint name="right_wheel_to_base" type="continuous">
+    <parent link="base_link"/>
+    <child link="wheel_right"/>
+    <origin xyz = "0 ${base_link_radius} 0.1"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+
+<joint name="left_wheel_to_base" type="continuous">
+    <parent link="base_link"/>
+    <child link="wheel_left"/>
+    <origin xyz = "0 ${-base_link_radius} 0.1"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+
+
+  <sensor name="camera" update_rate="20">
+    <parent link="base_link"/>
+    <origin xyz="0 0 0.5"/>
+    <visual>
+      <geometry>  
+        <box size="1 1 1"/>
+      </geometry>
+      <origin xyz = "1 1 1"/>
+    </visual>
+    
+    <camera>
+     <image width="640" height="480" hfov="1.5708" format="RGB8" near="0.01" far="50.0"/>
+   </camera>
+  </sensor>
+
+</robot>
+
+
+
